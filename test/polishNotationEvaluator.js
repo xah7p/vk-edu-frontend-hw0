@@ -28,4 +28,18 @@ QUnit.module("Тестируем функцию polishNotationEvaluator", functi
 
         assert.equal(isNaN(result), true);
     });
+
+    QUnit.test("Правильно вычисляет деление", function(assert) {
+        const input = "/ * 8 2 2"; // (8 * 2) / 2
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 8);
+    });
+
+    QUnit.test("Правильно вычисляет выражения с отрицательными числами", function(assert) {
+        const input = "+ -2 3"; // -2 + 3
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 1);
+    });
 });
