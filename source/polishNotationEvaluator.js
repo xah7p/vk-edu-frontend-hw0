@@ -1,5 +1,14 @@
 'use strict';
 
+/**
+ * Вычисляет выражение в польской префиксной записи (без рекурсии).
+ * @param {string} expression - строка с выражением
+ * @returns {number} Результат вычисления выражения или NaN
+ *
+ * @example
+ * // returns 7
+ * polishNotationEvaluator('+ 3 4');
+ */
 const polishNotationEvaluator = function (expression) {
     if (typeof expression !== 'string') {
         return NaN;
@@ -20,19 +29,19 @@ const polishNotationEvaluator = function (expression) {
 
     let error = false;
 
-    for (let i = tokens.length - 1; i >= 0; i--) {
-        if (error) break;
-
-        const token = tokens[i];
+    tokens.reduceRight((_, token) => {
+        if (error) {
+            return null;
+        }
 
         if (!Number.isNaN(Number(token))) {
             stack.push(Number(token));
-            continue;
+            return null;
         }
 
         if (!(token in operators) || stack.length < 2) {
             error = true;
-            break;
+            return null;
         }
 
         const left = stack.pop();
@@ -41,11 +50,12 @@ const polishNotationEvaluator = function (expression) {
 
         if (Number.isNaN(result)) {
             error = true;
-            break;
+            return null;
         }
 
         stack.push(result);
-    }
+        return null;
+    }, null);
 
     return error || stack.length !== 1 ? NaN : stack[0];
 };
