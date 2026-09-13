@@ -19,7 +19,6 @@ const polishNotationEvaluator = function (expression) {
         return NaN;
     }
 
-    const stack = [];
     const operators = {
         '+': (a, b) => a + b,
         '-': (a, b) => a - b,
@@ -27,21 +26,18 @@ const polishNotationEvaluator = function (expression) {
         '/': (a, b) => (b === 0 ? NaN : a / b)
     };
 
-    let error = false;
-
-    tokens.reduceRight((_, token) => {
+    const [stack, error] = tokens.reduceRight(([stack, error], token) => {
         if (error) {
-            return null;
+            return [stack, error];
         }
 
         if (!Number.isNaN(Number(token))) {
             stack.push(Number(token));
-            return null;
+            return [stack, false];
         }
 
         if (!(token in operators) || stack.length < 2) {
-            error = true;
-            return null;
+            return [stack, true];
         }
 
         const left = stack.pop();
@@ -49,13 +45,12 @@ const polishNotationEvaluator = function (expression) {
         const result = operators[token](left, right);
 
         if (Number.isNaN(result)) {
-            error = true;
-            return null;
+            return [stack, true];
         }
 
         stack.push(result);
-        return null;
-    }, null);
+        return [stack, false];
+    }, [[], false]);
 
     return error || stack.length !== 1 ? NaN : stack[0];
 };

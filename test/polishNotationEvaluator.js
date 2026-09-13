@@ -42,4 +42,32 @@ QUnit.module("Тестируем функцию polishNotationEvaluator", functi
 
         assert.equal(result, 1);
     });
+
+    QUnit.test("Правильно вычисляет выражение с лишними пробелами", function(assert) {
+        const input = "   +    3     4   ";
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 7);
+    });
+
+    QUnit.test("Возвращает NaN, если вместо строки число", function(assert) {
+        const input = 123
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(isNaN(result), true);
+    });
+
+    QUnit.test("Возвращает NaN для пустой строки", function(assert) {
+        const input = ""
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(isNaN(result), true);
+    });
+
+    QUnit.test("Возвращает NaN для неизвестного токена", function(assert) {
+        const input = "+ 3 abc"
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(isNaN(result), true);
+    });
 });
