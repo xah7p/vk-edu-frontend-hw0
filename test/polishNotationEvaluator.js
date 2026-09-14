@@ -36,6 +36,13 @@ QUnit.module("Тестируем функцию polishNotationEvaluator", functi
         assert.equal(result, 8);
     });
 
+    QUnit.test("Возвращает Infinity при делении на ноль", function(assert) {
+        const input = "/ 9 0";
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, Infinity);
+    });
+
     QUnit.test("Правильно вычисляет выражения с отрицательными числами", function(assert) {
         const input = "+ -2 3"; // -2 + 3
         const result = polishNotationEvaluator(input);
@@ -51,21 +58,39 @@ QUnit.module("Тестируем функцию polishNotationEvaluator", functi
     });
 
     QUnit.test("Возвращает NaN, если вместо строки число", function(assert) {
-        const input = 123
+        const input = 123;
         const result = polishNotationEvaluator(input);
 
         assert.equal(isNaN(result), true);
     });
 
+    QUnit.test("Возвращает NaN для невалидных типов входных данных", function(assert) {
+        const invalidInputs = [
+            123,
+            null,
+            undefined,
+            true,
+            '   ',
+            'abc',
+            '1,2',
+            ['+ 1 2'],
+        ];
+
+        invalidInputs.forEach(function(input) {
+            const result = polishNotationEvaluator(input);
+            assert.equal(isNaN(result), true, 'input type: ' + typeof input);
+        });
+    });
+
     QUnit.test("Возвращает NaN для пустой строки", function(assert) {
-        const input = ""
+        const input = "";
         const result = polishNotationEvaluator(input);
 
         assert.equal(isNaN(result), true);
     });
 
     QUnit.test("Возвращает NaN для неизвестного токена", function(assert) {
-        const input = "+ 3 abc"
+        const input = "+ 3 abc";
         const result = polishNotationEvaluator(input);
 
         assert.equal(isNaN(result), true);

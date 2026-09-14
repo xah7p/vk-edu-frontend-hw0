@@ -23,7 +23,7 @@ const polishNotationEvaluator = function (expression) {
         '+': (a, b) => a + b,
         '-': (a, b) => a - b,
         '*': (a, b) => a * b,
-        '/': (a, b) => (b === 0 ? NaN : a / b)
+        '/': (a, b) => (b === 0 ? Infinity : a / b)
     };
 
     const [stack, error] = tokens.reduceRight(([stack, error], token) => {
